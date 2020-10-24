@@ -19,6 +19,7 @@ authForm.onsubmit = event => {
       ).catch( error => {
         console.log('Falha no cadastro')
         console.log(error)
+        hideItem(loading)
       })
   }
 }
@@ -38,5 +39,19 @@ function signOut() {
   firebase.auth().signOut().catch( error => {
     console.log('Falha ao sair da conta')
     console.log(error)
+  })
+}
+
+// permite que usuário faça a  verficação do email
+function sendEmailVerification() {
+  showItem(loading)
+  let user = firebase.auth().currentUser
+  user.sendEmailVerification().then(() => {
+    alert('E-mail de verificação foi enviado para ' + user.email + '! verifique a caixa e entrada')
+  }).catch(error => {
+    alert('Houve um error ao enviar o e-mail de verificação')
+    console.log(error)
+  }).finally(() => {
+    hideItem(loading)
   })
 }
