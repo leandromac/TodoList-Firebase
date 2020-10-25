@@ -100,3 +100,14 @@ function signInWithGithub() {
       hideItem(loading)
     })
 }
+
+// permite autenticação com o facebook
+function signInWithFacebook() {
+  showItem(loading)
+  firebase.auth().signInWithPopup(new firebase.auth.FacebookAuthProvider())
+    .catch( error => {
+      alert('Houve um erro ao autenticar com o Facebook!')
+      console.log(error)
+      hideItem(loading)
+    })
+}
