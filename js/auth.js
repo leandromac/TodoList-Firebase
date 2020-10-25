@@ -89,3 +89,14 @@ function signInWithGoogle() {
       hideItem(loading)
     })
 }
+
+// permite autenticação com o github
+function signInWithGithub() {
+  showItem(loading)
+  firebase.auth().signInWithPopup(new firebase.auth.GithubAuthProvider())
+    .catch( error => {
+      alert('Houve um erro ao autenticar com o Github!')
+      console.log(error)
+      hideItem(loading)
+    })
+}
