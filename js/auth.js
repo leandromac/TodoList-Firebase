@@ -58,3 +58,22 @@ function sendEmailVerification() {
     hideItem(loading)
   })
 }
+
+// permite o usuário redefinir senha
+function sendPasswordResetEmail() {
+  let email = prompt('Redefinir senha! Informe o seu endereço de email.', authForm.email.value)
+  if(email) {
+    showItem(loading)
+    firebase.auth().sendPasswordResetEmail(email, actionCodeSettings)
+      .then(() => {
+        alert('E-mail de redefinição de senha foi enviado para ' + email + '.')
+      }).catch( error => {
+        alert('Houve um erro ao enviar e-mail de redefinição de senha!')
+        console.log(error)
+      }).finally(() => {
+        hideItem(loading)
+      })
+  } else {
+    alert('É preciso preencher o campo de email para redefinir a senha!')
+  }
+}
