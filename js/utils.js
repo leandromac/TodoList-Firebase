@@ -1,15 +1,17 @@
 // Defindo referências para elementos da página
-var authForm = document.getElementById('authForm')
-var authFormTitle = document.getElementById('authFormTitle')
-var register = document.getElementById('register')
-var access = document.getElementById('access')
-var loading = document.getElementById('loading')
-var auth = document.getElementById('auth')
-var userContent = document.getElementById('userContent')
-var userEmail = document.getElementById('userEmail')
-var sendEmailVerificationDiv = document.getElementById('sendEmailVerificationDiv')
-var emailVerified = document.getElementById('emailVerified')
-var passwordReset = document.getElementById('passwordReset')
+const authForm = document.getElementById('authForm')
+const authFormTitle = document.getElementById('authFormTitle')
+const register = document.getElementById('register')
+const access = document.getElementById('access')
+const loading = document.getElementById('loading')
+const auth = document.getElementById('auth')
+const userContent = document.getElementById('userContent')
+const userEmail = document.getElementById('userEmail')
+const sendEmailVerificationDiv = document.getElementById('sendEmailVerificationDiv')
+const emailVerified = document.getElementById('emailVerified')
+const passwordReset = document.getElementById('passwordReset')
+const userName = document.getElementById('userName')
+const userImg = document.getElementById('userImg')
 
 // Alterar o formulário de autenticação para o cadastro de novas contas
 function toggleToRegister() {
@@ -41,6 +43,7 @@ function hideItem(element) {
 
 // mostrar contedúdo para usuário autenticado
 function showUserContent(user) {
+  console.log(user)
   if(user.emailVerified) {
     emailVerified.innerHTML = 'E-mail verificado'
     hideItem(sendEmailVerificationDiv)
@@ -48,6 +51,8 @@ function showUserContent(user) {
     emailVerified.innerHTML = 'E-mail não verificado'
     showItem(sendEmailVerificationDiv)
   }
+  userImg.src = user.photoURL ? user.photoURL : 'img/unknownUser.png'
+  userName.innerHTML = user.displayName
   userEmail.innerHTML = user.email
   hideItem(auth)
   showItem(userContent)

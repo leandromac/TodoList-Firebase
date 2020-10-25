@@ -13,6 +13,7 @@ authForm.onsubmit = event => {
       ).catch( error => {
         console.log('Falha no acesso')
         console.log(error)
+        hideItem(loading)
       })
   } else {
     firebase.auth()
@@ -76,4 +77,15 @@ function sendPasswordResetEmail() {
   } else {
     alert('É preciso preencher o campo de email para redefinir a senha!')
   }
+}
+
+// permite autenticação com o google
+function signInWithGoogle() {
+  showItem(loading)
+  firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
+    .catch( error => {
+      alert('Houve um erro ao autenticar com o Google!')
+      console.log(error)
+      hideItem(loading)
+    })
 }
