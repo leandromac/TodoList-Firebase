@@ -130,3 +130,20 @@ function updateUserName() {
     alert('Nome de usuário não pode estar vazio.')
   }
 }
+
+// remove a conta de usuário
+function deleteAccount() {
+  let confirmation = confirm('Tem certeza que deseja excluir a sua conta?')
+  if(confirmation) {
+    showItem(loading)
+    firebase.auth().currentUser.delete()
+      .then(() => {
+        alert('Conta excluída com sucesso!')
+      }).catch(error => {
+        alert('Erro ao remover esta conta.')
+        console.log(error)
+      }).finally(() => {
+        hideItem(loading)
+      })
+  }
+}

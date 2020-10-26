@@ -60,6 +60,10 @@ p {
   background-color: #44c;
 }
 
+.danger {
+  background-color: red;
+}
+
 #loading {
   position: absolute;
   top: calc(50% - 100px);
