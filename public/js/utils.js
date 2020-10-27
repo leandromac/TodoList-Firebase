@@ -12,6 +12,7 @@ const emailVerified = document.getElementById('emailVerified')
 const passwordReset = document.getElementById('passwordReset')
 const userName = document.getElementById('userName')
 const userImg = document.getElementById('userImg')
+const todoForm = document.getElementById('todoForm')
 
 // Alterar o formulário de autenticação para o cadastro de novas contas
 function toggleToRegister() {
@@ -103,3 +104,6 @@ function showError(prefix, error) {
 const actionCodeSettings = {
   url: 'https://todolist-aa48b.firebaseapp.com'
 }
+
+var database = firebase.database()
+var dbRefUsers = database.ref('users')
