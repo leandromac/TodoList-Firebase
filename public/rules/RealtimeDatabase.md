@@ -36,6 +36,16 @@
 
 # Incluindo regra de validação
 # Faz com que só o campo seja string e tenha no máximo 30 caracteres
-"$tid": {
-  ".validate": "newData.child('name').isString() && newData.child('name').val().length <= 30"
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "$uid == auth.uid",
+        ".write": "$uid == auth.uid",
+        "$tid": {
+          ".validate": "newData.child('name').isString() && newData.child('name').val().length <= 30"
+        }
+      }
+    }
+  }
 }
