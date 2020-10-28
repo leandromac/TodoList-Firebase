@@ -13,6 +13,8 @@ const passwordReset = document.getElementById('passwordReset')
 const userName = document.getElementById('userName')
 const userImg = document.getElementById('userImg')
 const todoForm = document.getElementById('todoForm')
+const todoCount = document.getElementById('todoCount')
+const ulTodoList = document.getElementById('ulTodoList')
 
 // Alterar o formulário de autenticação para o cadastro de novas contas
 function toggleToRegister() {
@@ -62,6 +64,9 @@ function showUserContent(user) {
   userName.innerHTML = user.displayName
   userEmail.innerHTML = user.email
   hideItem(auth)
+  dbRefUsers.child(firebase.auth().currentUser.uid).on('value', dataSnapshot => {
+    fillTodoList(dataSnapshot)
+  })
   showItem(userContent)
 }
 
