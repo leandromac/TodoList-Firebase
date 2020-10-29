@@ -15,6 +15,7 @@ const userImg = document.getElementById('userImg')
 const todoForm = document.getElementById('todoForm')
 const todoCount = document.getElementById('todoCount')
 const ulTodoList = document.getElementById('ulTodoList')
+const search = document.getElementById('search')
 
 // Alterar o formulário de autenticação para o cadastro de novas contas
 function toggleToRegister() {
@@ -64,10 +65,31 @@ function showUserContent(user) {
   userName.innerHTML = user.displayName
   userEmail.innerHTML = user.email
   hideItem(auth)
-  dbRefUsers.child(firebase.auth().currentUser.uid).on('value', dataSnapshot => {
+  getTodoInfo()
+  search.onkeyup = () => {
+    if(search.value != '') {
+      let searchText = search.value.toLowerCase()
+      dbRefUsers.child(user.uid)
+        .orderByChild('nameLowerCase') // orderby name
+        .startAt(searchText).endAt(searchText + '\uf8ff')
+        .once('value') // once executa uma requisição apenas uma vez
+        .then(dataSnapshot => {
+          fillTodoList(dataSnapshot)
+        })
+    } else {
+      getTodoInfo()
+    }
+  }
+  showItem(userContent)
+}
+
+// busca tarefas em tempo real
+function getTodoInfo() {
+  dbRefUsers.child(firebase.auth().currentUser.uid)
+    .orderByChild('name') // orderby name
+    .on('value', dataSnapshot => {
     fillTodoList(dataSnapshot)
   })
-  showItem(userContent)
 }
 
 // mostrar contedúdo para usuário NÃO autenticado
