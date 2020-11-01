@@ -37,14 +37,35 @@ function trackUpload(upload) {
   showItem(progressFeedback)
   upload.on('state_changed', snapshot => {
     progress.value = snapshot.bytesTransferred / snapshot.totalBytes * 100 + '%'
-    console.log(snapshot)
-    console.log(snapshot.bytesTransferred / snapshot.totalBytes * 100 + '%')
+    console.log((snapshot.bytesTransferred / snapshot.totalBytes * 100).toFixed(2) + '%')
   }, error => {
     showError(error, 'Falha no upload da imagem')
+    hideItem(progressFeedback)
   }, () => {
     console.log('Sucesso no upload')
+    hideItem(progressFeedback)
   })
+
+  let playPouseUpload = true
+  playPouseUpload.onclick = () => {
+    playPouseUpload = !playPouseUpload
+    if(playPouseUpload) {
+      upload.resume()
+      playPouseBtn.innerHTML = 'Pausar'
+      console.log('Upload retomado')
+    } else {
+      upload.pause()
+      playPouseBtn.innerHTML = 'Continuar'
+      console.log('Upload pausado')
+    }
+  }
+  cancelBtn.onclick = () => {
+    upload.cancel()
+    alert('Upload cancelado pelo usuário!')
+    hideItem(progressFeedback)
+  }
 }
+
 
 // Exibe a lista de tarefas de usuários
 function fillTodoList(dataSnapshot) {

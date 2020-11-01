@@ -90,12 +90,14 @@
           <label for="name">Tarefa:</label>
           <input type="text" id="name" placeholder="Tarefa">
           <label for="img">Imagem:</label>
-          <input type="file" id="file">
+          <input type="file" id="file" accept="image/*">
           <button type="submit" id="addTask">Adicionar tarefa</button>
         </form>
 
         <div id="progressFeedback" class="startHidden">
           <progress max="100" id="progress"></progress>
+          <button id="playPouseBtn" class="alternative">Pause</button>
+          <button id="cancelBtn" class="alternative">Cancelar</button>
         </div>
       </div>
 
