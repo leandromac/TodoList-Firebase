@@ -91,13 +91,13 @@ function fillTodoList(dataSnapshot) {
   dataSnapshot.forEach(item => { // Percorre todos os elementos
     let value = item.val()
     let li = document.createElement('li') // Cria um elemento do tipo li
+    li.id = item.key
     let imgLi = document.createElement('img')
     imgLi.src = value.imgUrl ? value.imgUrl : 'img/defaultTodo.png'
     imgLi.setAttribute('class', 'imgTodo')
     li.appendChild(imgLi)
     let spanLi = document.createElement('span') // Cria um elemento do tipo span
     spanLi.appendChild(document.createTextNode(value.name)) // Adiciona o elemento de texto dentro da nossa span
-    spanLi.id = item.key // Define o id do spanLi como a chave da tarefa
     li.appendChild(spanLi) // Adiciona o span dentro do li
 
     let liRemoveBtn = document.createElement('button') // Cria um botão para a remoção da tarefa
@@ -118,15 +118,34 @@ function fillTodoList(dataSnapshot) {
 
 // Remove tarefas 
 function removeTodo(key) {
-  let selectedItem = document.getElementById(key)
-  let confimation = confirm('Realmente deseja remover a tarefa \"' + selectedItem.innerHTML + '\"?')
+  let todoName = document.querySelector('#' + key + ' > span')
+  let todoImg = document.querySelector('#' + key + ' > img')
+  let confimation = confirm('Realmente deseja remover a tarefa \"' + todoName.innerHTML + '\"?')
   if (confimation) {
     dbRefUsers.child(firebase.auth().currentUser.uid).child(key).remove()
       .then(() => {
-      console.log('Tarefa "' + selectedItem.innerHTML + '" removida com sucesso')
+      console.log('Tarefa "' + todoName.innerHTML + '" removida com sucesso')
+      removeFile(todoImg.src)
     }).catch(error => {
       showError('Falha ao remover tarefa: ', error)
     })
+  }
+}
+
+// Remove arquivos
+function removeFile(imgUrl) {
+  console.log(imgUrl)
+  let result = imgUrl.indexOf('img/defaultTodo.png')
+  if(result == -1) {
+    firebase.storage().refFromURL(imgURL).delete()
+      .then(() => {
+        console.log('Arquivo removido com sucesso.')
+      }).catch(error => {
+        console.log('Falha ao remover arquivo.')
+        console.log(error)
+      })
+  } else {
+    console.log('Nenhum arquivo foi removido.')
   }
 }
 
