@@ -62,10 +62,8 @@ function trackUpload(upload) {
   var playPauseUpload = true // Estado de controle do nosso upload (pausado ou em andamento)
   playPauseBtn.onclick = function() { // Botão para pausar/continuar upload clicado
     playPauseUpload = !playPauseUpload // Inverte o estado de controle do upload
-
     if (playPauseUpload) { // Se deseja retomar o upload, faça...
       upload.resume() // Retoma o upload
-
       playPauseBtn.innerHTML = 'Pausar'
       console.log('Upload retomado')
     } else { // Se deseja pausar o upload, faça...
@@ -92,6 +90,10 @@ function fillTodoList(dataSnapshot) {
   dataSnapshot.forEach(function (item) { // Percorre todos os elementos
     var value = item.val()
     var li = document.createElement('li') // Cria um elemento do tipo li
+    let imgLi = document.createElement('img')
+    imgLi.src = value.imgUrl ? value.imgUrl : 'img/defaultTodo.png'
+    imgLi.setAttribute('class', 'imgTodo')
+    li.appendChild(imgLi)
     var spanLi = document.createElement('span') // Cria um elemento do tipo span
     spanLi.appendChild(document.createTextNode(value.name)) // Adiciona o elemento de texto dentro da nossa span
     spanLi.id = item.key // Define o id do spanLi como a chave da tarefa

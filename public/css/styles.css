@@ -105,3 +105,14 @@ li:hover {
   position: relative;
   bottom: 3px
 }
+
+.imgTodo {
+  height: 20px;
+  margin-right: 4px;
+  border-radius: 4px
+}
+
+span {
+  position: relative;
+  bottom: 3px
+}
