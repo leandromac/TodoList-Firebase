@@ -13,8 +13,9 @@
       <img src="img/todoList.png">
     </div>
 
+    <!--Feedback de carregamento (loading)-->
     <div id="loading">
-      <img src="img/loading.gif" alt="Loading...">
+      <img src="img/loading.gif" alt="Animação de carregamento">
     </div>
 
     <!--Conteúdo destinado para usuários não autenticados-->
@@ -32,16 +33,16 @@
         <button type="submit" id="submitAuthForm">Acessar</button>
       </form>
 
+      <!--Possibilita a redefiniação de senha-->
+      <p id="passwordReset">
+        Esqueceu a senha?
+        <button class="alternative" onclick="sendPasswordResetEmail()">Redefinir minha senha</button>
+      </p>
+
       <!--Alternar o fomulário de autenticação para o cadastro de novas contas-->
       <p id="register">
         Não possui uma conta?
         <button onclick="toggleToRegister()" class="alternative">Cadastrar uma nova conta</button>
-      </p>
-
-      <!--Esqueceu a renha-->
-      <p id="passwordReset">
-        Esqueceu a senha?
-        <button onclick="sendPasswordResetEmail()" class="alternative">Redefinir minha senha</button>
       </p>
 
       <!--Alternar o fomulário de autenticação para o acesso de contas já existentes-->
@@ -50,16 +51,16 @@
         <button onclick="toggleToAccess()" class="alternative">Acesse a sua conta</button>
       </p>
 
-      <!--Autenticação com outros provedores-->
+      <!--Outros provedores de autenticação-->
       <p>
         Ou acesse usando:<br>
-        <img class="authIcon" src="img/google.png" alt="Logar com o Google" onclick="signInWithGoogle()">
-        <img class="authIcon" src="img/github.png" alt="Logar com o Github" onclick="signInWithGithub()">
-        <img class="authIcon" src="img/facebook.png" alt="Logar com o Facebook" onclick="signInWithFacebook()">
+        <img src="img/google.png" alt="Autenticação pelo Google" onclick="signInWithGoogle()">
+        <img src="img/github.png" alt="Autenticação pelo GitHub" onclick="signInWithGitHub()">
+        <img src="img/facebook.png" alt="Autenticação pelo Facebook" onclick="signInWithFacebook()">
       </p>
     </div>
 
-    <!-- Conteúdo destinado a usuários autentidados -->
+    <!--Conteúdo destinado para usuários autenticados-->
     <div id="userContent" class="startHidden">
       <hr>
       <div id="userInfo" class="center">
@@ -72,45 +73,57 @@
         </div>
         <button class="alternative" onclick="updateUserName()">Atualizar meu nome</button>
         <button class="alternative" onclick="signOut()">Sair</button>
-        <button class="danger" onclick="deleteAccount()">Excluir minha conta</button>
+        <button class="danger" onclick="deleteUserAccount()">Excluir minha conta</button>
       </div>
 
+      <hr>
+
+      <!--Lista de tarefas do usuário-->
       <div id="todoList">
         <h3 id="todoCount">Carregando tarefas...</h3>
         <div class="center">
-          <input type="text" placeholder="Pesquisar tarefa..." id="search">
+          <label for="search">Buscar: </label>
+          <input type="text" placeholder="Buscar" id="search">
         </div>
         <ul id="ulTodoList"></ul>
       </div>
 
+      <hr>
+
       <div class="center">
-        <hr>
+        <!--Formulário de tarefas-->
         <form id="todoForm">
-          <h3 id="todoFormTitle">Adicionar tarefa</h3>
-          <label for="name">Tarefa:</label>
+          <h3 id="todoFormTitle">Adicionar tarefa:</h3>
+          <label for="name">Tarefa: </label>
           <input type="text" id="name" placeholder="Tarefa">
-          <label for="img">Imagem:</label>
+
+          <label for="file">Figura: </label>
           <input type="file" id="file" accept="image/*">
-          <button type="submit" id="addTask">Adicionar tarefa</button>
+          <button type="submit" id="submitTodoForm">Adicionar tarefa</button>
         </form>
+
+        <div id="cancelUpdateTodo" class="startHidden">
+          <button onclick="comfirmTodoUpdate()">Confirmar modificação</button>
+          <button class="alternative" onclick="resetTodoForm()">Cancelar modificação</button>
+        </div>
 
         <div id="progressFeedback" class="startHidden">
           <progress max="100" id="progress"></progress>
-          <button id="playPouseBtn" class="alternative">Pause</button>
+          <button id="playPauseBtn" class="alternative">Pausar</button>
           <button id="cancelBtn" class="danger">Cancelar</button>
         </div>
       </div>
-
     </div>
   </div>
-  
 
-  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+  <!--Recursos do Firebase-->
+  <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-database.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-storage.js"></script>
+
   
-  <!-- JavaScript personalizado-->
+  <!--Nossa programação em JavaScript-->
   <script src="js/firebase.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/auth.js"></script>
