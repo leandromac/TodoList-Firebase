@@ -23,16 +23,7 @@ todoForm.onsubmit = event => {
               name: todoForm.name.value,
               nameLowerCase: todoForm.name.value.toLowerCase()
             }
-  
-            dbRefUsers.child(firebase.auth().currentUser.uid).push(data)
-              .then(() => {
-              console.log('Tarefa "' + data.name + '" adicionada com sucesso')
-            }).catch(error => {
-              showError('Falha ao adicionar tarefa (use no máximo 30 caracteres): ', error)
-            })
-  
-            todoForm.name.value = ''
-            todoForm.file.value = ''
+            completeTodoCreate(data)
           })      
         }).catch(error => {
           showError('Falha ao adicionar tarefa: ', error)
@@ -46,18 +37,23 @@ todoForm.onsubmit = event => {
         nameLowerCase: todoForm.name.value.toLowerCase()
       }
 
-      dbRefUsers.child(firebase.auth().currentUser.uid).push(data)
-        .then(() => {
-        console.log('Tarefa "' + data.name + '" adicionada com sucesso')
-      }).catch(error => {
-        showError('Falha ao adicionar tarefa (use no máximo 30 caracteres): ', error)
-      })
-
-      todoForm.name.value = ''
+      completeTodoCreate(data)
     }
   } else {
     alert('O nome da tarefa não pode ser em branco para criar a tarefa!')
   }
+}
+
+// Completa a criação de tarefas(persiste no banco de dados)
+function completeTodoCreate(data) {
+  dbRefUsers.child(firebase.auth().currentUser.uid).push(data)
+    .then(() => {
+    console.log('Tarefa "' + data.name + '" adicionada com sucesso')
+  }).catch(error => {
+    showError('Falha ao adicionar tarefa (use no máximo 30 caracteres): ', error)
+  })
+  todoForm.name.value = ''
+  todoForm.file.value = ''
 }
 
 // Rastreia o progresso de upload
@@ -171,7 +167,7 @@ function removeFile(imgUrl) {
   }
 }
 
-// Atualiza tarefas
+// Prepara a confirmação de tarefas
 let updateTodoKey = null
 function updateTodo(key) {
   updateTodoKey = key // Atribui o conteúdo de key dentro de uma variável global
@@ -180,7 +176,7 @@ function updateTodo(key) {
   todoFormTitle.innerHTML = '<strong>Editar a tarefa:</strong> ' + todoName.innerHTML
   // Altera o texto da entrada de nome (coloca o nome da tarefa a ser atualizada)
   todoForm.name.value = todoName.innerHTML
-  hideItem(submitTodoForm)
+  hideItem(todoForm.submitTodoForm)
   showItem(cancelUpdateTodo)
 }
 
@@ -188,11 +184,12 @@ function updateTodo(key) {
 function resetTodoForm() {
   todoFormTitle.innerHTML = 'Adicionar tarefa:'
   hideItem(cancelUpdateTodo)
-  submitTodoForm.style.display = 'initial'
+  todoForm.submitTodoForm.style.display = 'initial'
   todoForm.name.value = ''
   todoForm.file.value = ''
 }
 
+// Confirmação de tarefa
 function comfirmTodoUpdate() {
   hideItem(cancelUpdateTodo)
   if (todoForm.name.value != '') {
@@ -216,16 +213,7 @@ function comfirmTodoUpdate() {
               name: todoForm.name.value,
               nameLowerCase: todoForm.name.value.toLowerCase()
             }
-
-            dbRefUsers.child(firebase.auth().currentUser.uid).child(updateTodoKey).update(data)
-              .then(() => {
-              console.log('Tarefa "' + data.name + '" atualizada com sucesso')
-            }).catch(error => {
-              showError('Falha ao atualizar tarefa: ', error)
-            })
-
-            removeFile(todoImg.src) // Remove a imagem antiga
-            resetTodoForm() // Restaura o estado inicial do formulário de tarefas
+            completeTodoUpdate(data, todoImg.src)
           })
         }).catch(error => {
           showError('Falha ao atualizar tarefa: ', error)
@@ -238,38 +226,23 @@ function comfirmTodoUpdate() {
         name: todoForm.name.value,
         nameLowerCase: todoForm.name.value.toLowerCase()
       }
-
-      dbRefUsers.child(firebase.auth().currentUser.uid).child(updateTodoKey).update(data)
-        .then(() => {
-        console.log('Tarefa "' + data.name + '" atualizada com sucesso')
-      }).catch(error => {
-        showError('Falha ao atualizar tarefa: ', error)
-      })
-
-      resetTodoForm() // Restaura o estado inicial do formulário de tarefas
+      completeTodoUpdate(data)
     }
   } else {
     alert('O nome da tarefa não pode ser vazio!')
   }
 }
 
-// Atualiza tarefas
-function updateTodo2(key) {
-  let selectedItem = document.getElementById(key)
-  let newTodoName = prompt('Escolha um novo nome para a tarefa \"' + selectedItem.innerHTML + '\".', selectedItem.innerHTML)
-  if (newTodoName != '') {
-    let data = {
-      name: newTodoName,
-      nameLowerCase: newTodoName.toLowerCase()
+// Completa a atualização de tarefas (persistes informações no banco de dados)
+function completeTodoUpdate(data, imgUrl) {
+  dbRefUsers.child(firebase.auth().currentUser.uid).child(updateTodoKey).update(data)
+    .then(() => {
+    console.log('Tarefa "' + data.name + '" atualizada com sucesso')
+    if(imgUrl) {
+      removeFile(imgUrl) // Remove a imagem antiga
     }
-
-    dbRefUsers.child(firebase.auth().currentUser.uid).child(key).update(data)
-      .then(() => {
-      console.log('Tarefa "' + data.name + '" atualizada com sucesso')
-    }).catch(error => {
-      showError('Falha ao atualizar tarefa: ', error)
-    })
-  } else {
-    alert('O nome da tarefa não pode ser em branco para atualizar a tarefa')
-  }
+  }).catch(error => {
+    showError('Falha ao atualizar tarefa: ', error)
+  })
+  resetTodoForm() // Restaura o estado inicial do formulário de tarefas
 }
