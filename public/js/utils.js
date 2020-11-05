@@ -93,7 +93,7 @@ function showUserContent(user) {
 // Busca tarefas em tempo real (listagem padrão usando o on)
 function getDefaultTodoList() {
   dbRefUsers.child(firebase.auth().currentUser.uid)
-  .orderByChild('name') // Ordena as tarefas pelo nome da tarefa
+  .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
   .on('value', dataSnapshot => {
     fillTodoList(dataSnapshot)
   })
@@ -124,6 +124,8 @@ function showError(prefix, error) {
     case 'auth/popup-closed-by-user': alert(prefix + ' ' + 'O popup de autenticação foi fechado antes da operação ser concluída!')
     break;   
     case 'storage/canceled': 
+    break;
+    case 'storage/unauthorized': alert(prefix + ' ' + 'Falha ao acessar o Cloud Storage!') 
     break;
   
     default: alert(prefix + ' ' + error.message)

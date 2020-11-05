@@ -5,6 +5,10 @@ todoForm.onsubmit = event => {
     let file = todoForm.file.files[0] // Seleciona o primeiro aquivo da seleção de aquivos
     if (file != null) { // Verifica se o arquivo foi selecionado
       if (file.type.includes('image')) { // Verifica se o arquivo é uma imagem
+        if(file.size > 1024 * 1024 * 2) {
+          alert('A imagem não pode ser maior que 2MB. A imagem atual tem ' + (file.size /  1024 / 1024).toFixed(3) + 'MB')
+          return
+        }
         // Compõe o nome do arquivo
         let imgName = firebase.database().ref().push().key + '-' + file.name
         // Compõe o caminho do arquivo
@@ -191,11 +195,15 @@ function resetTodoForm() {
 
 // Confirmação de tarefa
 function comfirmTodoUpdate() {
-  hideItem(cancelUpdateTodo)
   if (todoForm.name.value != '') {
     let todoImg = document.querySelector('#' + updateTodoKey + ' > img')
     let file = todoForm.file.files[0] // Seleciona o primeiro aquivo da seleção de aquivos
     if (file != null) { // Verifica se o arquivo foi selecionado
+      if(file.size > 1024 * 1024 * 2) {
+        alert('A imagem não pode ser maior que 2MB. A imagem atual tem ' + (file.size /  1024 / 1024).toFixed(3) + 'MB')
+        return
+      }
+      hideItem(cancelUpdateTodo)
       if (file.type.includes('image')) { // Verifica se o arquivo é uma imagem
         // Compõe o nome do arquivo
         let imgName = firebase.database().ref().push().updateTodoKey + '-' + file.name
