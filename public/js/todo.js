@@ -51,8 +51,7 @@ todoForm.onsubmit = event => {
 // Completa a criação de tarefas(persiste no banco de dados)
 function completeTodoCreate(data) {
   // CLOUD FIRESTORE CONNECTION 
-  firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
-    .collection('tarefas').add(data).then(() => {
+    dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas').add(data).then(() => {
       console.log('Tarefa "' + data.name + '" adicionada com sucesso!')
     }).catch(error => {
       showError('Falha ao adicionar tarefa (use no máximo 30 caracteres).')
@@ -110,12 +109,15 @@ function trackUpload(upload) {
 // Exibe a lista de tarefas do usuário
 function fillTodoList(dataSnapshot) {
   ulTodoList.innerHTML = ''
-  let num = dataSnapshot.numChildren()
+  let num = dataSnapshot.size
+  // let num = dataSnapshot.numChildren()
   todoCount.innerHTML = num + (num > 1 ? ' tarefas' : ' tarefa') + ':' // Exibe na interface o número de tarefas
   dataSnapshot.forEach(item => { // Percorre todos os elementos
-    let value = item.val()
+    let value = item.data()
+    // let value = item.val()
     let li = document.createElement('li') // Cria um elemento do tipo li
-    li.id = item.key // Define o id do li como a chave da tarefa
+    li.id = item.id // Define o id do li como a chave da tarefa
+    // li.id = item.key // Define o id do li como a chave da tarefa
 
     let imgLi = document.createElement('img') // Cria um elemento img
     // Configura src (origem da imagem) como sendo o imgUrl da tarefa
@@ -150,13 +152,20 @@ function removeTodo(key) {
 
   let confimation = confirm('Realmente deseja remover a tarefa \"' + todoName.innerHTML + '\"?')
   if (confimation) {
-    dbRefUsers.child(firebase.auth().currentUser.uid).child(key).remove()
+    dbFirestore.doc(firestore.auth().currentUser.uid).collection('tarefas').doc(key).delete()
       .then(() => {
-      console.log('Tarefa "' + todoName.innerHTML + '" removida com sucesso')
-      removeFile(todoImg.src)
-    }).catch(error => {
-      showError('Falha ao remover tarefa: ', error)
-    })
+        console.log('Tarefa "' + todoName.innerHTML + '" removida com sucesso')
+        removeFile(todoImg.src)
+      }).catch(error => {
+        showError('Falha ao remover tarefa: ', error)
+      })
+    // dbRefUsers.child(firebase.auth().currentUser.uid).child(key).remove()
+    //   .then(() => {
+    //   console.log('Tarefa "' + todoName.innerHTML + '" removida com sucesso')
+    //   removeFile(todoImg.src)
+    // }).catch(error => {
+    //   showError('Falha ao remover tarefa: ', error)
+    // })
   }
 }
 
@@ -251,14 +260,23 @@ function comfirmTodoUpdate() {
 
 // Completa a atualização de tarefas (persistes informações no banco de dados)
 function completeTodoUpdate(data, imgUrl) {
-  dbRefUsers.child(firebase.auth().currentUser.uid).child(updateTodoKey).update(data)
-    .then(() => {
-    console.log('Tarefa "' + data.name + '" atualizada com sucesso')
-    if(imgUrl) {
-      removeFile(imgUrl) // Remove a imagem antiga
-    }
-  }).catch(error => {
-    showError('Falha ao atualizar tarefa: ', error)
-  })
+  dbFirestore.doc(firestore.auth().currentUser.uid).collection('tarefas').doc(key)
+    .update(data).then(() => {
+      console.log('Tarefa "' + data.name + '" atualizada com sucesso')
+      if(imgUrl) {
+        removeFile(imgUrl)
+      }
+    }).catch(error => {
+      showError('Falha ao atualizar tarefas: ', error)
+    }) 
+  // dbRefUsers.child(firebase.auth().currentUser.uid).child(updateTodoKey).update(data)
+  //   .then(() => {
+  //   console.log('Tarefa "' + data.name + '" atualizada com sucesso')
+  //   if(imgUrl) {
+  //     removeFile(imgUrl) // Remove a imagem antiga
+  //   }
+  // }).catch(error => {
+  //   showError('Falha ao atualizar tarefa: ', error)
+  // })
   resetTodoForm() // Restaura o estado inicial do formulário de tarefas
 }

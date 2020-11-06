@@ -76,12 +76,17 @@ function showUserContent(user) {
   search.onkeyup = () => {
     if (search.value != '') {
       let searchText = search.value.toLowerCase()
-      dbRefUsers.child(user.uid)
-      .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
-      .startAt(searchText).endAt(searchText + '\uf8ff') // Delimita os resultados de pesquisa
-      .once('value').then(dataSnapshot => { // Busca tarefas filtradas somente uma vez (once)
-        fillTodoList(dataSnapshot)
-      })
+      dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas')
+        .orderBy('nameLowerCase').startAt(searchText).endAt(searchText + '\uf8ff')
+        .get().then(dataSnapshot => {
+          fillTodoList(dataSnapshot)
+        })
+      // dbRefUsers.child(user.uid)
+      // .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
+      // .startAt(searchText).endAt(searchText + '\uf8ff') // Delimita os resultados de pesquisa
+      // .once('value').then(dataSnapshot => { // Busca tarefas filtradas somente uma vez (once)
+      //   fillTodoList(dataSnapshot)
+      // })
     } else {
       getDefaultTodoList()
     }
@@ -92,11 +97,16 @@ function showUserContent(user) {
 
 // Busca tarefas em tempo real (listagem padrão usando o on)
 function getDefaultTodoList() {
-  dbRefUsers.child(firebase.auth().currentUser.uid)
-  .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
-  .on('value', dataSnapshot => {
-    fillTodoList(dataSnapshot)
-  })
+  dbFirestore.doc(firebase.auth().currentUser.uid).collection('tarefas')
+    .orderBy('nameLowerCase').onSnapshot(dataSnapshot => {
+      fillTodoList(dataSnapshot)
+    })
+  
+  // dbRefUsers.child(firebase.auth().currentUser.uid)
+  // .orderByChild('nameLowerCase') // Ordena as tarefas pelo nome da tarefa
+  // .on('value', dataSnapshot => {
+  //   fillTodoList(dataSnapshot)
+  // })
 }
 
 // Mostrar conteúdo para usuários não autenticados
@@ -137,5 +147,9 @@ let actionCodeSettings = {
   url: 'https://todolist-84473.firebaseapp.com'
 }
 
+// Referência ao Realtime Database
 let database = firebase.database()
 let dbRefUsers = database.ref('users')
+
+// Referência ao Cloud Firestore
+let dbFirestore = firebase.firestore().collection('users')
